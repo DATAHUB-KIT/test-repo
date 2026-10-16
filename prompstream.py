@@ -6,15 +6,31 @@ from dotenv import load_dotenv
 from google import genai
 
 # Load variables from .env
-load_dotenv()
+#load_dotenv()
 
 # Read API key securely
-api_key = os.getenv("GEMINI_API_KEY")
+#api_key = os.getenv("GEMINI_API_KEY")
 
-if not api_key:
-    raise ValueError(
-        "GEMINI_API_KEY is missing. Check your .env file."
-    )
+#if not api_key:
+#    raise ValueError(
+#        "GEMINI_API_KEY is missing. Check your .env file."
+ #   )
+
+
+try:
+    API_KEY = st.secrets["GEMINI_API_KEY"]
+except Exception:
+    API_KEY = ""
+
+if not API_KEY:
+    st.error("Gemini API key not found. Add GEMINI_API_KEY to .streamlit/secrets.toml locally or Streamlit Cloud Secrets.")
+    st.stop()
+
+client = genai.Client(api_key=API_KEY)
+MODEL = "gemini-3.1-flash-lite"
+
+
+
 
 # Create Gemini client
 client = genai.Client(api_key=api_key)
